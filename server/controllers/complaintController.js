@@ -1,3 +1,4 @@
+import { prioritizeComplaint } from "../utils/complaintPriority.js";
 import Complaint from "../models/Complaint.js";
 
 // Create a new complaint
@@ -10,11 +11,13 @@ export const createComplaint = async (req, res) => {
         message: "Title and description are required.",
       });
     }
-
+const aiResult = prioritizeComplaint(title, description);
     const complaint = await Complaint.create({
       title,
       description,
       reportedBy: req.user._id,
+      priority: aiResult.priority,
+aiReason: aiResult.reason,
     });
 
     const populatedComplaint = await complaint.populate(
@@ -127,6 +130,37 @@ export const updateComplaintStatus = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to update complaint.",
+      error: error.message,
+    });
+  }
+};
+
+
+// Delete a complaint — Admin only
+export const deleteComplaint = async (req, res) => {
+  try {
+    const complaint = await Complaint.findById(req.params.id);
+
+    if (!complaint) {
+      return res.status(404).json({
+        message: "Complaint not found.",
+      });
+    }
+
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({
+        message: "Only Admin can delete complaints.",
+      });
+    }
+
+    await Complaint.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      message: "Complaint deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete complaint.",
       error: error.message,
     });
   }

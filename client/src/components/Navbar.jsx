@@ -19,12 +19,37 @@ function Navbar() {
       <div className="navbar-links">
         {user ? (
           <>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/announcements">Announcements</Link>
-            <Link to="/assignments">Assignments</Link>
-            <Link to="/complaints">Complaints</Link>
-            <Link to="/timetable">Timetable</Link>
-            <Link to="/profile">Profile</Link>
+            {/* Student Navigation */}
+            {user.role === "Student" && (
+              <>
+                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/announcements">Announcements</Link>
+                <Link to="/assignments">Assignments</Link>
+                <Link to="/complaints">Complaints</Link>
+                <Link to="/timetable">Timetable</Link>
+                <Link to="/profile">Profile</Link>
+              </>
+            )}
+
+            {/* Faculty Navigation */}
+            {user.role === "Faculty" && (
+              <>
+                <Link to="/faculty">Faculty Dashboard</Link>
+                <Link to="/announcements">Announcements</Link>
+                <Link to="/assignments">Assignments</Link>
+                <Link to="/timetable">Timetable</Link>
+                <Link to="/profile">Profile</Link>
+              </>
+            )}
+
+            {/* Admin Navigation */}
+            {user.role === "Admin" && (
+              <>
+                <Link to="/admin">Admin Dashboard</Link>
+                <Link to="/announcements">Announcements</Link>
+                <Link to="/profile">Profile</Link>
+              </>
+            )}
 
             <button
               type="button"

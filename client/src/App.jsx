@@ -8,15 +8,38 @@ import Assignments from "./pages/Assignments";
 import Complaints from "./pages/Complaints";
 import Timetable from "./pages/Timetable";
 import Profile from "./pages/Profile";
-
+import FacultyDashboard from "./pages/FacultyDashboard";
 import MainLayout from "./layouts/MainLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+
+<Route
+  path="/admin"
+  element={
+    <MainLayout>
+      <ProtectedRoute allowedRoles={["Admin"]}>
+        <AdminDashboard />
+      </ProtectedRoute>
+    </MainLayout>
+  }
+/>
+
+  <Route
+  path="/faculty"
+  element={
+    <MainLayout>
+      <ProtectedRoute allowedRoles={["Faculty"]}>
+        <FacultyDashboard />
+      </ProtectedRoute>
+    </MainLayout>
+  }
+/>
 
         <Route
           path="/*"

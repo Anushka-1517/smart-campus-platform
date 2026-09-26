@@ -13,7 +13,16 @@ const complaintSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+priority: {
+  type: String,
+  enum: ["Low", "Medium", "High"],
+  default: "Low"
+},
 
+aiReason: {
+  type: String,
+  default: ""
+},
     reportedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
