@@ -23,6 +23,19 @@ aiReason: {
   type: String,
   default: ""
 },
+
+category: {
+  type: String,
+  enum: [
+    "Academic",
+    "Infrastructure",
+    "Electrical",
+    "Security",
+    "Cleanliness",
+    "Other",
+  ],
+  default: "Other",
+},
     reportedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

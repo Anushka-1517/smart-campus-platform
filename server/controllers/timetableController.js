@@ -49,17 +49,30 @@ export const createTimetableEntry = async (req, res) => {
   }
 };
 
-// Get timetable
+
+// Get timetable based on user role
 export const getTimetable = async (req, res) => {
   try {
-    const filter = {};
+    let filter = {};
 
-    if (req.user.department) {
-      filter.department = req.user.department;
+    // Admin sees the complete timetable
+    if (req.user.role === "Admin") {
+      filter = {};
     }
 
-    if (req.user.year) {
-      filter.year = req.user.year;
+    // Faculty sees only classes assigned to them
+    else if (req.user.role === "Faculty") {
+      filter = {
+        faculty: req.user._id,
+      };
+    }
+
+    // Student sees classes for their department and year
+    else if (req.user.role === "Student") {
+      filter = {
+        department: req.user.department,
+        year: req.user.year,
+      };
     }
 
     const timetable = await Timetable.find(filter)
@@ -76,6 +89,7 @@ export const getTimetable = async (req, res) => {
     });
   }
 };
+
 
 // Get a single timetable entry
 export const getTimetableEntryById = async (req, res) => {
@@ -96,6 +110,33 @@ export const getTimetableEntryById = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Failed to fetch timetable entry.",
+      error: error.message,
+    });
+  }
+};
+
+
+// Delete a timetable entry
+export const deleteTimetableEntry = async (req, res) => {
+  try {
+    const timetableEntry = await Timetable.findById(
+      req.params.id
+    );
+
+    if (!timetableEntry) {
+      return res.status(404).json({
+        message: "Timetable entry not found.",
+      });
+    }
+
+    await Timetable.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      message: "Timetable entry deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete timetable entry.",
       error: error.message,
     });
   }

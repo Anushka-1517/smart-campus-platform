@@ -97,6 +97,7 @@ function Complaints() {
         <section className="complaint-form-card">
           <div className="complaint-section-header">
             <h2>Report an Issue</h2>
+
             <p>
               Tell us about a problem that needs attention on
               campus.
@@ -165,12 +166,16 @@ function Complaints() {
         <section className="complaints-list-section">
           <div className="complaint-section-header">
             <h2>My Complaints</h2>
-            <p>Track the complaints you have submitted.</p>
+
+            <p>
+              Track the complaints you have submitted.
+            </p>
           </div>
 
           {loading ? (
             <div className="complaint-empty-card">
               <h3>Loading complaints...</h3>
+
               <p>
                 Please wait while we fetch your complaints.
               </p>
@@ -178,6 +183,7 @@ function Complaints() {
           ) : complaints.length === 0 ? (
             <div className="complaint-empty-card">
               <h3>No complaints yet</h3>
+
               <p>
                 You have not submitted any campus complaints.
               </p>
@@ -220,9 +226,18 @@ function Complaints() {
                     {complaint.description}
                   </p>
 
+                  <div className="ai-classification">
+                    <span>🤖 AI Classification</span>
+
+                    <strong>
+                      {complaint.category || "Other"}
+                    </strong>
+                  </div>
+
                   {complaint.resolutionNote && (
                     <div className="resolution-note">
                       <span>Resolution Note</span>
+
                       <p>{complaint.resolutionNote}</p>
                     </div>
                   )}

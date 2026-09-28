@@ -1,4 +1,5 @@
 import { prioritizeComplaint } from "../utils/complaintPriority.js";
+import { classifyComplaint } from "../services/complaintAI.js";
 import Complaint from "../models/Complaint.js";
 
 // Create a new complaint
@@ -12,13 +13,20 @@ export const createComplaint = async (req, res) => {
       });
     }
 const aiResult = prioritizeComplaint(title, description);
-    const complaint = await Complaint.create({
-      title,
-      description,
-      reportedBy: req.user._id,
-      priority: aiResult.priority,
-aiReason: aiResult.reason,
-    });
+
+const category = await classifyComplaint(
+  title,
+  description
+);
+
+const complaint = await Complaint.create({
+  title,
+  description,
+  reportedBy: req.user._id,
+  priority: aiResult.priority,
+  aiReason: aiResult.reason,
+  category,
+});
 
     const populatedComplaint = await complaint.populate(
       "reportedBy",
@@ -29,7 +37,9 @@ aiReason: aiResult.reason,
       message: "Complaint submitted successfully.",
       complaint: populatedComplaint,
     });
-  } catch (error) {
+ } catch (error) {
+    console.error("CREATE COMPLAINT ERROR:", error);
+
     res.status(500).json({
       message: "Failed to submit complaint.",
       error: error.message,

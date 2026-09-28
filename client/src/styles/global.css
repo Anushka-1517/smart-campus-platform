@@ -2646,3 +2646,28 @@ textarea {
     width: 100%;
   }
 }
+/* AI Complaint Classification */
+.ai-classification {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  font-size: 14px;
+}
+
+.ai-classification span {
+  color: #166534;
+  font-weight: 600;
+}
+
+.ai-classification strong {
+  color: #15803d;
+  font-weight: 700;
+}

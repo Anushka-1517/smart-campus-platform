@@ -155,3 +155,54 @@ export const submitAssignment = async (req, res) => {
     });
   }
 };
+
+// Get all students for assignment selection
+export const getStudents = async (req, res) => {
+  try {
+    const students = await User.find({
+      role: "Student",
+    }).select("name email department year");
+
+    res.status(200).json({
+      students,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch students.",
+      error: error.message,
+    });
+  }
+};
+// Delete an assignment
+export const deleteAssignment = async (req, res) => {
+  try {
+    const assignment = await Assignment.findById(req.params.id);
+
+    if (!assignment) {
+      return res.status(404).json({
+        message: "Assignment not found.",
+      });
+    }
+
+    // Only the faculty who created it or an admin can delete it
+    if (
+      req.user.role !== "Admin" &&
+      assignment.createdBy.toString() !== req.user._id.toString()
+    ) {
+      return res.status(403).json({
+        message: "You can only delete assignments you created.",
+      });
+    }
+
+    await Assignment.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      message: "Assignment deleted successfully.",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to delete assignment.",
+      error: error.message,
+    });
+  }
+};
